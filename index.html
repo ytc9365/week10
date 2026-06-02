@@ -1,0 +1,603 @@
+
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Liminal Interface | Design the space where humans still stay human.</title>
+  <style>
+    :root {
+      --bg: oklch(18% 0.04 250);
+      --surface: oklch(22% 0.05 250);
+      --fg: oklch(96% 0.01 250);
+      --muted: oklch(55% 0.02 250);
+      --border: oklch(30% 0.05 250);
+      --accent: oklch(78% 0.08 155);
+      --warning: oklch(72% 0.15 75);
+      
+      --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+      
+      --transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Layout Helpers */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .section {
+      padding: 120px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    /* Typography */
+    h1, h2, h3 {
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 95vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 7vw, 5rem);
+      margin: 24px 0;
+      color: var(--fg);
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 550px;
+      line-height: 1.4;
+    }
+
+    .hero-visual {
+      position: absolute;
+      right: -5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 55%;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    /* Grid Overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, var(--border) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Founder Story */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 100px;
+      align-items: start;
+    }
+
+    .story-text {
+      font-size: 1.15rem;
+      color: var(--muted);
+    }
+
+    .story-text p {
+      margin-bottom: 28px;
+    }
+
+    .quote {
+      font-size: 1.6rem;
+      color: var(--fg);
+      border-left: 2px solid var(--accent);
+      padding-left: 32px;
+      margin: 48px 0;
+      line-height: 1.4;
+    }
+
+    /* Pain Points */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 64px;
+    }
+
+    .pain-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .pain-card:hover {
+      border-color: var(--warning);
+    }
+
+    .pain-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--warning);
+      opacity: 0.3;
+    }
+
+    .pain-metric {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--warning);
+      margin-bottom: 24px;
+      display: block;
+      letter-spacing: 0.1em;
+    }
+
+    /* Services */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+    }
+
+    .service-card {
+      border: 1px solid var(--border);
+      padding: 40px;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.01);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .service-card:hover {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.03);
+      transform: translateY(-4px);
+    }
+
+    .service-label {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      margin-bottom: 20px;
+      display: block;
+      font-size: 0.75rem;
+    }
+
+    .service-delivery {
+      margin-top: auto;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Form Section */
+    .form-container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 64px;
+      border: 1px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 32px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .input-field {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 16px;
+      color: var(--fg);
+      font-family: var(--font-main);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    select.input-field {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='white' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 24px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 16px;
+    }
+
+    .submit-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* Success State */
+    #success-state {
+      display: none;
+      text-align: center;
+      padding: 80px 40px;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 40px;
+      color: var(--accent);
+    }
+
+    /* Medical Pulse */
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 12px;
+      box-shadow: 0 0 12px var(--accent);
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    footer {
+      padding: 80px 0;
+      text-align: center;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      border-top: 1px solid var(--border);
+    }
+
+    /* SVG Elements */
+    .diagnostic-svg {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .story-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-visual {
+        width: 70%;
+        right: -10%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-visual {
+        display: none;
+      }
+      .hero-title {
+        font-size: 3.5rem;
+      }
+      .pain-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-container {
+        padding: 40px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-content">
+        <span class="mono"><span class="pulse-dot"></span>SYSTEM_STATUS: OPERATIONAL_V.104</span>
+        <h1 class="hero-title">Liminal Interface</h1>
+        <p class="hero-subtitle">
+          Design the space where humans still stay human.<br>
+          <span style="color: var(--fg); opacity: 0.8; display: block; margin-top: 12px;">Prevent AI products from breaking human trust at scale.</span>
+        </p>
+      </div>
+
+      <div class="hero-visual">
+        <!-- Clinical Interaction Pressure Map -->
+        <svg class="diagnostic-svg" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background Grids -->
+          <path d="M50 500 L750 500" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4" />
+          <path d="M50 400 L750 400" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4" />
+          <path d="M50 300 L750 300" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4" />
+          <path d="M50 200 L750 200" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4" />
+          
+          <!-- Trust Decay Curve -->
+          <path d="M50 150 C 200 150, 300 450, 500 480 T 750 500" stroke="var(--accent)" stroke-width="2.5" fill="none">
+            <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="4s" />
+            <animate attributeName="stroke-dasharray" values="1000;1000" dur="4s" />
+          </path>
+          
+          <!-- Friction Points -->
+          <g>
+            <circle cx="320" cy="380" r="8" fill="var(--warning)">
+              <animate attributeName="r" values="8;12;8" dur="1.5s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+            <text x="340" y="385" fill="var(--warning)" font-family="var(--font-mono)" font-size="12" font-weight="bold">TRUST_COLLAPSE_DETECTED</text>
+            <line x1="320" y1="380" x2="320" y2="500" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2 2" />
+          </g>
+
+          <!-- Interaction Layers -->
+          <rect x="550" y="100" width="180" height="120" stroke="var(--border)" stroke-width="1" fill="var(--surface)" opacity="0.8" />
+          <text x="565" y="130" fill="var(--muted)" font-family="var(--font-mono)" font-size="10">INTERACTION_LAYER_EXPLODED</text>
+          <path d="M570 150 L710 150" stroke="var(--border)" stroke-width="1" />
+          <path d="M570 170 L680 170" stroke="var(--accent)" stroke-width="4" />
+          <path d="M570 190 L650 190" stroke="var(--warning)" stroke-width="4" />
+          
+          <text x="50" y="540" fill="var(--muted)" font-family="var(--font-mono)" font-size="10">AXIS_X: COGNITIVE_LOAD_INTENSITY</text>
+          <text x="50" y="560" fill="var(--muted)" font-family="var(--font-mono)" font-size="10">AXIS_Y: SYSTEM_AUTONOMY_LEVEL</text>
+        </svg>
+      </div>
+    </header>
+
+    <!-- Founder Story -->
+    <section class="section">
+      <div class="story-grid">
+        <div>
+          <span class="mono">DIAGNOSTIC_ORIGIN</span>
+          <h2 style="font-size: 2.8rem; margin: 24px 0;">從資工背景看穿的<br>自動化悖論</h2>
+        </div>
+        <div class="story-text">
+          <p>
+            創辦人具資工技術背景，能深度追蹤 LLM Workflow、Agent Chain 與系統限制。在經歷 AI 時代 HCI 觀念的洗禮後，深刻意識到目前市場的巨大盲點：企業瘋狂將 AI 接進產品，卻試圖用舊時代的固定 UI 去框限動態的 AI 能力。
+          </p>
+          <div class="quote">
+            這導致了嚴重的「自動化悖論」——AI 幫忙做越多，人類的審核負擔與認知焦慮反而成倍暴增。
+          </div>
+          <p>
+            我們選擇站在「工程理解、HCI 思維、AI 工作流、使用者心理」的交界點，擔任「高載速狀態下的認知調校教練」，成為將人類真實需求與 AI 系統行為完美媒合的「翻譯者」。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pain Points -->
+    <section class="section">
+      <div style="max-width: 600px;">
+        <span class="mono">SEGMENT_ANALYSIS</span>
+        <h2 style="font-size: 2.8rem; margin: 24px 0;">誰正在面臨信任潰散？</h2>
+      </div>
+      
+      <div class="pain-grid">
+        <div class="pain-card">
+          <span class="pain-metric">[ STRESS_INDEX: HIGH ]</span>
+          <h3>焦慮中的 SaaS 公司</h3>
+          <p style="color: var(--muted); margin-top: 20px;">
+            擁有穩定產品與團隊，但因 FOMO 盲目堆疊 Chatbot、Agent 功能，導致產品節奏失控、開發方向崩塌、設計師迷失在舊地圖中。
+          </p>
+        </div>
+        <div class="pain-card">
+          <span class="pain-metric">[ RISK_LEVEL: CRITICAL ]</span>
+          <h3>失控的 AI Native Startup</h3>
+          <p style="color: var(--muted); margin-top: 20px;">
+            Demo 極度驚艷、自動化極其 aggressive，但上線後因過度自動化、缺乏協作節奏，導致用戶產生低頻焦慮，進而發生系統性信任瓦解。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section">
+      <span class="mono">INTERVENTION_PROGRAMS</span>
+      <h2 style="font-size: 2.8rem; margin: 24px 0;">核心服務項目</h2>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <span class="service-label">PROGRAM_01</span>
+          <h3>Interaction Stress Audit</h3>
+          <p style="color: var(--muted); margin-top: 16px; font-size: 1rem; line-height: 1.5;">
+            AI 產品的心理壓力健檢。透過追蹤 Tool Call 與 Agent Flow，繪製壓力地圖，精準指出使用者在哪裡猶豫與人工接管的節點。
+          </p>
+          <div class="service-delivery">
+            DELIVERY: Interaction Pressure Map, Trust Collapse Risk Flow.
+          </div>
+        </div>
+
+        <div class="service-card">
+          <span class="service-label">PROGRAM_02</span>
+          <h3>AI Interaction Prototype Sprint</h3>
+          <p style="color: var(--muted); margin-top: 16px; font-size: 1rem; line-height: 1.5;">
+            進場直接用 React 實作可運作的互動行為原型。定義 AI 與人類的控制權邊界 (Control Boundary) 與出錯時的信任修復機制。
+          </p>
+          <div class="service-delivery">
+            DELIVERY: Functional Behavior Prototype, Control Boundary Spec.
+          </div>
+        </div>
+
+        <div class="service-card">
+          <span class="service-label">PROGRAM_03</span>
+          <h3>Human-AI Pacing Design Program</h3>
+          <p style="color: var(--muted); margin-top: 16px; font-size: 1rem; line-height: 1.5;">
+            進駐式核心計畫。為團隊設計 AI 的「互動節奏與自主權邊界」，建立低成本、可逆、可觀察的 Research Preview 實驗文化。
+          </p>
+          <div class="service-delivery">
+            DELIVERY: Autonomy Boundary Framework, Pacing Design Doc.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registration Form -->
+    <section class="section" id="form-section" style="border-bottom: none;">
+      <div id="main-form">
+        <div style="text-align: center; margin-bottom: 80px;">
+          <span class="mono">DIAGNOSTIC_INTAKE</span>
+          <h2 style="font-size: 2.8rem; margin-top: 24px;">申請臨床診斷</h2>
+          <p style="color: var(--muted); margin-top: 20px;">請提供您的產品現況，我們將針對其極限空間進行精確分析。</p>
+        </div>
+
+        <div class="form-container">
+          <form id="landing-form">
+            <div class="form-group">
+              <label class="form-label">姓名 / NAME</label>
+              <input type="text" class="input-field" required placeholder="Full name of lead observer">
+            </div>
+            <div class="form-group">
+              <label class="form-label">公司名稱 / ORGANIZATION</label>
+              <input type="text" class="input-field" required placeholder="Legal entity name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">目前產品遇到的 AI UX 最大困境 / CORE_SYMPTOM</label>
+              <select name="focus" class="input-field" required>
+                <option value="" disabled selected>請選擇診斷重點</option>
+                <option value="trust">用戶不信任 AI / 系統行為難以預測</option>
+                <option value="roadmap">團隊 Roadmap 混亂 / 盲目堆疊功能</option>
+                <option value="overload">自動化導致審核過載 / 認知負擔過重</option>
+                <option value="other">其他系統性摩擦</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">簡述臨床症狀 (選填) / NOTES</label>
+              <textarea class="input-field" rows="4" placeholder="Briefly describe the observation points..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Initialize Consultation</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Success State -->
+      <div id="success-state">
+        <div class="success-icon">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4" />
+            <path d="M20 32 L28 40 L44 24" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <animateTransform attributeName="transform" type="rotate" from="0 32 32" to="360 32 32" dur="10s" repeatCount="indefinite" />
+          </svg>
+        </div>
+        <h2 style="font-size: 2.4rem; margin-bottom: 24px;">Diagnosis Requested.</h2>
+        <p style="color: var(--muted); max-width: 500px; margin: 0 auto 48px; line-height: 1.6;">
+          We are analyzing the liminal space of your product. <br>Expect a precise response in 48 hours.
+        </p>
+        <div class="mono" style="color: var(--accent); justify-content: center;">
+          <span class="pulse-dot"></span> ANALYZING_LIMINAL_SPACE...
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>LIMINAL INTERFACE / EST. 2026 / CLINICAL INTERACTION ENGINEERING</p>
+      <p style="margin-top: 12px; opacity: 0.5;">Fidelity: High / Surface: Prototype / Mode: Clinical</p>
+    </footer>
+  </div>
+
+    <script>
+    document.getElementById('landing-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const originalText = btn.innerText;
+      btn.innerText = 'EXECUTING...';
+      btn.disabled = true;
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      try {
+        const response = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (response.ok) {
+          document.getElementById('main-form').style.display = 'none';
+          document.getElementById('success-state').style.display = 'block';
+          window.scrollTo({ top: document.getElementById('form-section').offsetTop, behavior: 'smooth' });
+        } else {
+          alert('Submission failed. Please try again.');
+          btn.innerText = originalText;
+          btn.disabled = false;
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('Network error. Please check your connection.');
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
